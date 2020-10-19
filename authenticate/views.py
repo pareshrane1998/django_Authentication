@@ -2,7 +2,7 @@ from django.shortcuts import render , redirect
 from django.contrib.auth import authenticate , login , logout , update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm , UserChangeForm , PasswordChangeForm
 from django.contrib import messages
-from . forms import SignUpForm , EditProfileForm
+from . forms import SignUpForm , EditProfileForm , ChangedPassword
 
 # Create your views here.
 def home(request):
@@ -61,14 +61,14 @@ def edit_profile(request):
 
 def change_password(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(data=request.POST,user=request.user) # set our form as usercreation form and pass in whatever they posted
+        form = ChangedPassword(data=request.POST,user=request.user) # set our form as usercreation form and pass in whatever they posted
         if form.is_valid():
             form.save()
             update_session_auth_hash(request,form.user)
             messages.success(request,('You Have Edited Your Password!'))
             return redirect('home')
     else:
-        form = PasswordChangeForm(user=request.user) #instance = passes the user info which is in database
+        form = ChangedPassword(user=request.user) #instance = passes the user info which is in database
     context = {'form' : form}
 
     return render(request,'authenticate/change_password.html',context)
